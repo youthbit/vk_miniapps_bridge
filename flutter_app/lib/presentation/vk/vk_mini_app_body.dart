@@ -4,6 +4,7 @@ import 'package:extended_theme/extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/presentation/app_theme/app_theme.dart';
 import 'package:flutter_app/presentation/vk/pages/vk_home_page.dart';
+import 'package:flutter_app/user_singleton.dart';
 import 'package:vk_bridge/vk_bridge.dart';
 
 class VKMiniAppBody extends StatefulWidget {
@@ -17,14 +18,16 @@ class _VKMiniAppBodyState extends State<VKMiniAppBody> {
   EdgeInsets insets = const EdgeInsets.only(top: 59, bottom: 34);
 
 
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    VKBridge.instance.updateConfigStream.last.then((value) {
+      onUpdateConfig(value);
+    });
+
     VKBridge.instance.init().then((value) {
-      VKBridge.instance.updateConfigStream.last.then((value) {
-        onUpdateConfig(value);
-      });
 
       VKBridge.instance.setViewSettings(
         statusBarStyle: StatusBarStyle.dark,
@@ -32,6 +35,8 @@ class _VKMiniAppBodyState extends State<VKMiniAppBody> {
 
       _streamSubscription =
           VKBridge.instance.updateConfigStream.listen(onUpdateConfig);
+
+      initUserData();
     });
   }
 
@@ -39,6 +44,15 @@ class _VKMiniAppBodyState extends State<VKMiniAppBody> {
   void dispose() {
     _streamSubscription.cancel();
     super.dispose();
+  }
+
+  void initUserData() async {
+    var u = await VKBridge.instance.getUserInfo();
+    UserSingleton().name = u.firstName;
+    UserSingleton().photoUrl = u.photo100;
+    UserSingleton().isInit = true;
+
+    setState(() {});
   }
 
   void onUpdateConfig(VKWebAppUpdateConfig config) {
@@ -83,7 +97,7 @@ class _VKMiniAppBodyState extends State<VKMiniAppBody> {
       color: ThemeHolder.themeOf<AppTheme>(context).backgroundSc,
       child: Padding(
         padding: insets,
-        child: VkHomePage(),
+        child: UserSingleton().isInit? VkHomePage() : Center(child: CircularProgressIndicator(color: ThemeHolder.themeOf<AppTheme>(context).accent),),
       ),
     );
   }

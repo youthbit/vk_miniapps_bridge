@@ -44,7 +44,7 @@ class _PlatformMiniAppState extends State<PlatformMiniApp> {
           'lightVK': AppTheme(
             accent: const Color(0xFF4586E4),
             background: const Color(0xFFFFFFFF),
-            backgroundSc: const Color(0xFFFBFBFC),
+            backgroundSc: const Color(0xFFEBEDF0),
             button: const Color(0xFFF2F3F5),
             titleText: const Color(0xFF000000),
             subtitleText: const Color(0xFF9AA2AC),
@@ -67,7 +67,7 @@ class _PlatformMiniAppState extends State<PlatformMiniApp> {
               duration: const Duration(milliseconds: 200),
               builder:(_, d, __) => Opacity(
                   opacity: d,
-                  child: VKMiniAppBody()
+                  child: const VKMiniAppBody()
               )
           ),
         ));
