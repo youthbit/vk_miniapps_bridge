@@ -10,5 +10,6 @@ https://dev.vk.com/mini-apps/getting-started
 
 Для запуска Flutter проекта используйте:
 ```bash
-build.sh
+chmod +x ./build.sh
+./build.sh
 ```
